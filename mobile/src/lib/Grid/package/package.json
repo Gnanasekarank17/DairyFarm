@@ -1,0 +1,73 @@
+{
+  "name": "@oeconnection/pcb-grid",
+  "version": "1.0.30",
+  "description": "PCBGrid — shared React DataGrid with dark/light themes, density modes, sorting, filtering, grouping, conditional formatting, pivoting, and CSV/Excel/PDF export. Internal to the OEConnection PCB platform.",
+  "type": "module",
+  "main": "./dist/datagrid.cjs",
+  "module": "./dist/datagrid.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/datagrid.js",
+      "require": "./dist/datagrid.cjs"
+    },
+    "./enterprise": {
+      "types": "./dist/enterprise.d.ts",
+      "import": "./dist/enterprise.js",
+      "require": "./dist/enterprise.cjs"
+    },
+    "./styles": "./dist/core.css",
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "dev:test": "vite --host 127.0.0.1",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx",
+    "preview": "vite preview",
+    "license:generate-keypair": "node scripts/generate-keypair.mjs",
+    "license:issue": "node scripts/issue-license.mjs"
+  },
+  "peerDependencies": {
+    "lucide-react": ">=0.300.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "^8.20.6",
+    "@tanstack/react-virtual": "^3.11.2",
+    "chart.js": "^4.5.1",
+    "date-fns": "^4.1.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
+    "react-chartjs-2": "^5.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "keywords": [
+    "pcb-grid",
+    "datagrid",
+    "react",
+    "tanstack",
+    "table",
+    "enterprise",
+    "headless",
+    "virtual-scroll",
+    "data-table"
+  ],
+  "license": "UNLICENSED",
+  "author": "Thirukumaran Ranganathan",
+  "repository": {
+    "type": "git",
+    "url": "https://dev.azure.com/OEC-EUR/Tires%20and%20Billing/_git/PCBGrid"
+  },
+  "publishConfig": {
+    "registry": "https://pkgs.dev.azure.com/OEC-EUR/_packaging/Shared/npm/registry/"
+  }
+}

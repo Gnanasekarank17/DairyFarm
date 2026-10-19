@@ -1,0 +1,40 @@
+# ── Secrets / environment ─────────────────────────────────
+# Never commit real secrets. Keep .env.example tracked as the template.
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+mobile/.env
+mobile/.env.*
+!mobile/.env.example
+
+# Google service-account key(s)
+dairyfarmmanager-*.json
+*service-account*.json
+*-gcp-*.json
+
+# ── Node ──────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Logs / runtime ────────────────────────────────────────
+logs/
+*.log
+backend/logs/
+mobile/logs/
+
+# ── Build output / caches ─────────────────────────────────
+mobile/dist/
+mobile/.expo/
+mobile/web-build/
+.expo/
+
+# ── OS / editor ───────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.tmp

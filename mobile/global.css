@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--brand-forest: #0d3b2e;
+	--brand-ink: #18342c;
+	--brand-mint-bg: #f2f7f5;
+}
+
+body {
+	font-family: 'Manrope', 'Segoe UI', sans-serif;
+	background: radial-gradient(circle at 12% 8%, #e6f4ee 0%, transparent 35%),
+		radial-gradient(circle at 88% 10%, #e8f1ff 0%, transparent 40%),
+		var(--brand-mint-bg);
+	color: var(--brand-ink);
+}
+
+/* Suppress the browser's built-in password reveal/clear icons so custom
+   eye-toggle buttons in secureTextEntry inputs don't get double icons. */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+	display: none;
+}

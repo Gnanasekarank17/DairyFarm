@@ -1,0 +1,32 @@
+const express = require('express');
+const router = express.Router();
+
+router.use('/auth', require('./auth.routes'));
+router.use('/users', require('./users.routes'));
+router.use('/customers', require('./customers.routes'));
+router.use('/customer-requests', require('./customerRequests.routes'));
+router.use('/deliveries', require('./deliveries.routes'));
+router.use('/invoices', require('./invoices.routes'));
+router.use('/payments', require('./payments.routes'));
+router.use('/cows', require('./cows.routes'));
+router.use('/goats', require('./goats.routes'));
+router.use('/hens', require('./hens.routes'));
+router.use('/ducks', require('./ducks.routes'));
+router.use('/breeding', require('./breeding.routes'));
+router.use('/calving', require('./calving.routes'));
+router.use('/milk-production', require('./milkProduction.routes'));
+router.use('/dashboard', require('./dashboard.routes'));
+router.use('/reports', require('./reports.routes'));
+router.use('/notifications', require('./notifications.routes'));
+router.use('/settings', require('./settings.routes'));
+router.use('/products', require('./products.routes'));
+router.use('/milk-rates', require('./milkRates.routes'));
+router.use('/month-closures', require('./monthClosures.routes'));
+router.use('/orders', require('./orders.routes'));
+router.use('/subscriptions', require('./subscriptions.routes'));
+router.use('/backup', require('./backup.routes'));
+router.use('/expenses', require('./expenses.routes'));
+router.use('/income', require('./income.routes'));
+router.use('/medicines', require('./medicines.routes'));
+
+module.exports = router;

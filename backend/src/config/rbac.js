@@ -1,0 +1,165 @@
+const ROLES = Object.freeze({
+  ADMIN: 'admin',
+  SUPERVISOR: 'supervisor',
+  MANAGER: 'manager',
+  DELIVERY_PERSON: 'deliveryperson',
+  CATTLE_CARETAKER: 'cattlecaretaker',
+  FARM_CLEANER: 'farmcleaner',
+  CUSTOMER: 'customer',
+});
+
+const PERMISSIONS = Object.freeze({
+  DASHBOARD_VIEW: 'dashboard:view',
+  USERS_MANAGE: 'users:manage',
+  CUSTOMERS_VIEW: 'customers:view',
+  CUSTOMERS_MANAGE: 'customers:manage',
+  DELIVERIES_VIEW: 'deliveries:view',
+  DELIVERIES_MANAGE: 'deliveries:manage',
+  CUSTOMER_REQUESTS_VIEW: 'customer_requests:view',
+  CUSTOMER_REQUESTS_CREATE: 'customer_requests:create',
+  CUSTOMER_REQUESTS_MANAGE: 'customer_requests:manage',
+  BILLING_VIEW: 'billing:view',
+  BILLING_MANAGE: 'billing:manage',
+  CATTLE_VIEW: 'cattle:view',
+  CATTLE_MANAGE: 'cattle:manage',
+  REPORTS_VIEW: 'reports:view',
+  SETTINGS_MANAGE: 'settings:manage',
+  BACKUP_MANAGE: 'backup:manage',
+  ORDERS_VIEW: 'orders:view',
+  ORDERS_CREATE: 'orders:create',
+  ORDERS_MANAGE: 'orders:manage',
+  SUBSCRIPTIONS_VIEW: 'subscriptions:view',
+  SUBSCRIPTIONS_CREATE: 'subscriptions:create',
+  SUBSCRIPTIONS_MANAGE: 'subscriptions:manage',
+  EXPENSES_VIEW: 'expenses:view',
+  EXPENSES_MANAGE: 'expenses:manage',
+  INCOME_VIEW: 'income:view',
+  INCOME_MANAGE: 'income:manage',
+});
+
+const ROLE_LABELS = Object.freeze({
+  [ROLES.ADMIN]: 'Admin',
+  [ROLES.SUPERVISOR]: 'Supervisor',
+  [ROLES.MANAGER]: 'Manager',
+  [ROLES.DELIVERY_PERSON]: 'Delivery Person',
+  [ROLES.CATTLE_CARETAKER]: 'Cattle Caretaker',
+  [ROLES.FARM_CLEANER]: 'Farm Sweeper/Cleaner',
+  [ROLES.CUSTOMER]: 'Customer',
+});
+
+const ROLE_PERMISSIONS = Object.freeze({
+  [ROLES.ADMIN]: Object.values(PERMISSIONS),
+  [ROLES.SUPERVISOR]: [
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.CUSTOMERS_VIEW,
+    PERMISSIONS.CUSTOMERS_MANAGE,
+    PERMISSIONS.DELIVERIES_VIEW,
+    PERMISSIONS.DELIVERIES_MANAGE,
+    PERMISSIONS.CUSTOMER_REQUESTS_VIEW,
+    PERMISSIONS.CUSTOMER_REQUESTS_MANAGE,
+    PERMISSIONS.BILLING_VIEW,
+    PERMISSIONS.CATTLE_VIEW,
+    PERMISSIONS.CATTLE_MANAGE,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.ORDERS_VIEW,
+    PERMISSIONS.ORDERS_MANAGE,
+    PERMISSIONS.SUBSCRIPTIONS_VIEW,
+    PERMISSIONS.SUBSCRIPTIONS_MANAGE,
+    PERMISSIONS.EXPENSES_VIEW,
+    PERMISSIONS.EXPENSES_MANAGE,
+    PERMISSIONS.INCOME_VIEW,
+    PERMISSIONS.INCOME_MANAGE,
+  ],
+  [ROLES.MANAGER]: [
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.CUSTOMERS_VIEW,
+    PERMISSIONS.CUSTOMERS_MANAGE,
+    PERMISSIONS.DELIVERIES_VIEW,
+    PERMISSIONS.CUSTOMER_REQUESTS_VIEW,
+    PERMISSIONS.CUSTOMER_REQUESTS_MANAGE,
+    PERMISSIONS.BILLING_VIEW,
+    PERMISSIONS.BILLING_MANAGE,
+    PERMISSIONS.CATTLE_VIEW,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.ORDERS_VIEW,
+    PERMISSIONS.ORDERS_MANAGE,
+    PERMISSIONS.SUBSCRIPTIONS_VIEW,
+    PERMISSIONS.SUBSCRIPTIONS_MANAGE,
+    PERMISSIONS.EXPENSES_VIEW,
+    PERMISSIONS.EXPENSES_MANAGE,
+    PERMISSIONS.INCOME_VIEW,
+    PERMISSIONS.INCOME_MANAGE,
+  ],
+  [ROLES.DELIVERY_PERSON]: [
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.CUSTOMERS_VIEW,
+    PERMISSIONS.DELIVERIES_VIEW,
+    PERMISSIONS.DELIVERIES_MANAGE,
+    PERMISSIONS.CUSTOMER_REQUESTS_VIEW,
+    PERMISSIONS.CUSTOMER_REQUESTS_MANAGE,
+    PERMISSIONS.ORDERS_VIEW,
+    PERMISSIONS.ORDERS_MANAGE,
+    PERMISSIONS.SUBSCRIPTIONS_VIEW,
+  ],
+  [ROLES.CATTLE_CARETAKER]: [
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.CATTLE_VIEW,
+    PERMISSIONS.CATTLE_MANAGE,
+  ],
+  [ROLES.FARM_CLEANER]: [
+    PERMISSIONS.DASHBOARD_VIEW,
+  ],
+  [ROLES.CUSTOMER]: [
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.CUSTOMER_REQUESTS_CREATE,
+    PERMISSIONS.ORDERS_CREATE,
+    PERMISSIONS.SUBSCRIPTIONS_CREATE,
+  ],
+});
+
+const ROLE_ALIASES = Object.freeze({
+  admin: ROLES.ADMIN,
+  owner: ROLES.ADMIN,
+  supervisor: ROLES.SUPERVISOR,
+  manager: ROLES.MANAGER,
+  delivery: ROLES.DELIVERY_PERSON,
+  deliveryperson: ROLES.DELIVERY_PERSON,
+  delivery_person: ROLES.DELIVERY_PERSON,
+  'delivery person': ROLES.DELIVERY_PERSON,
+  cattlecare: ROLES.CATTLE_CARETAKER,
+  cattlecaretaker: ROLES.CATTLE_CARETAKER,
+  cattle_caretaker: ROLES.CATTLE_CARETAKER,
+  'cattle care taker': ROLES.CATTLE_CARETAKER,
+  'cattle caretaker': ROLES.CATTLE_CARETAKER,
+  cleaner: ROLES.FARM_CLEANER,
+  sweeper: ROLES.FARM_CLEANER,
+  farmcleaner: ROLES.FARM_CLEANER,
+  farm_cleaner: ROLES.FARM_CLEANER,
+  'farm cleaner': ROLES.FARM_CLEANER,
+  farmsweeper: ROLES.FARM_CLEANER,
+  farm_sweeper: ROLES.FARM_CLEANER,
+  'farm sweeper': ROLES.FARM_CLEANER,
+  'farm sweeper/cleaner': ROLES.FARM_CLEANER,
+  customer: ROLES.CUSTOMER,
+  client: ROLES.CUSTOMER,
+  staff: ROLES.SUPERVISOR,
+});
+
+const normalizeRole = (role) => {
+  const key = String(role || '').trim().toLowerCase();
+  return ROLE_ALIASES[key] || null;
+};
+
+const permissionsForRole = (role) => ROLE_PERMISSIONS[normalizeRole(role)] || [];
+
+const hasPermission = (role, permission) => permissionsForRole(role).includes(permission);
+
+module.exports = {
+  ROLES,
+  PERMISSIONS,
+  ROLE_LABELS,
+  ROLE_PERMISSIONS,
+  normalizeRole,
+  permissionsForRole,
+  hasPermission,
+};

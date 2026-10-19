@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  dairy-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dairy-farm-api
+    restart: unless-stopped
+    # Loads SMTP_USER / SMTP_PASS / EMAIL_FROM (and SMTP_HOST/PORT) from backend/.env.
+    # Keys that also appear under environment: below are overridden by those inline values.
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+
+      # SQL Server — host.docker.internal reaches Windows host from inside Docker
+      DB_SERVER: host.docker.internal
+      DB_PORT: 1433
+      DB_INSTANCE: ""           # leave blank — we use fixed port 1433
+      DB_NAME: DairyFarmDB
+      DB_USER: dairy_app
+      DB_PASSWORD: DairyFarm@2024
+      DB_ENCRYPT: "false"
+      DB_TRUST_SERVER_CERT: "true"
+
+      # Auth
+      JWT_SECRET: DairyFarmJwtSecret_MustBe32CharsMin!
+      JWT_EXPIRES_IN: 30d
+      ADMIN_PIN: "1234"
+
+      # Business info (edit these)
+      BUSINESS_NAME: "My Dairy Farm"
+      BUSINESS_ADDRESS: ""
+      BUSINESS_PHONE: ""
+      BUSINESS_GST: ""
+
+      # Optional — Google sign-in (leave blank to use PIN-only auth)
+      GOOGLE_CLIENT_ID: "722958218329-3cilrcogg4lb9ee3ei44qjdsj3ri3emg.apps.googleusercontent.com"
+
+      # Email (Gmail SMTP): set SMTP_USER / SMTP_PASS / EMAIL_FROM in backend/.env
+      # (SMTP_HOST=smtp.gmail.com, SMTP_PORT=587 come from backend/.env via env_file above)
+
+      # Optional — Expo push notifications
+      EXPO_ACCESS_TOKEN: ""
+
+    volumes:
+      - dairy-uploads:/app/uploads
+
+    extra_hosts:
+      # Allow container to resolve host.docker.internal on Linux too
+      - "host.docker.internal:host-gateway"
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  dairy-uploads:
+    driver: local
