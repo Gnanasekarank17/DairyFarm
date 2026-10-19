@@ -1,8 +1,20 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+// Hosted API (Vercel). The web build is served from the same Vercel project, so it
+// calls the API on its own origin; native builds use the absolute URL.
+export const HOSTED_API_URL = 'https://dairy-farm-web-vert.vercel.app/api/v1';
+
+const resolveBaseUrl = () => {
+  const fromEnv = process.env.EXPO_PUBLIC_API_URL;
+  if (fromEnv && fromEnv.trim()) return fromEnv.trim();
+  if (Platform.OS === 'web' && typeof window !== 'undefined') return '/api/v1';
+  return HOSTED_API_URL;
+};
+
+export const BASE_URL = resolveBaseUrl();
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   Object.prototype.toString.call(value) === '[object Object]';

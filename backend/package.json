@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/noto-sans": "^0.4.2",
+    "@vercel/blob": "^2.8.2",
     "axios": "^1.6.7",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",

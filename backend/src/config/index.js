@@ -3,6 +3,17 @@ require('dotenv').config();
 module.exports = {
   port: parseInt(process.env.PORT) || 3000,
   nodeEnv: process.env.NODE_ENV || 'development',
+  // True on Vercel: no app.listen, no node-cron, no file logging, lazy DB pool.
+  isServerless: Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME),
+
+  // Vercel Blob (backups, photos, generated files). Token is injected by the Vercel Blob store.
+  blob: {
+    token: process.env.BLOB_READ_WRITE_TOKEN,
+    storeId: process.env.BLOB_STORE_ID,
+  },
+
+  // Shared secret Vercel Cron sends as `Authorization: Bearer <CRON_SECRET>`.
+  cronSecret: process.env.CRON_SECRET || '',
 
   db: {
     server:           process.env.DB_SERVER || 'host.docker.internal',

@@ -278,8 +278,20 @@ export const monthClosuresApi = {
     apiClient.post(`/month-closures/${year}/${month}/reopen`, { reason }),
 };
 
-// Backup
+// Backup (stored in Vercel Blob when the API runs on Vercel)
 export const backupApi = {
   create: () => apiClient.post('/backup/create'),
   list: () => apiClient.get('/backup/list'),
+  download: (pathname: string) =>
+    apiClient.get('/backup/download', { params: { pathname }, responseType: 'blob' }),
+  remove: (pathname: string) => apiClient.delete('/backup', { params: { pathname } }),
+};
+
+// File uploads (photos / documents) -> Vercel Blob. `data` is base64 or a data: URL.
+export const uploadsApi = {
+  upload: (payload: { fileName: string; contentType: string; data: string }, folder: 'photos' | 'documents' = 'photos') =>
+    apiClient.post('/uploads', payload, { params: { folder } }),
+  list: (folder: 'photos' | 'documents' = 'photos', cursor?: string) =>
+    apiClient.get('/uploads', { params: { folder, cursor } }),
+  remove: (url: string) => apiClient.delete('/uploads', { params: { url } }),
 };

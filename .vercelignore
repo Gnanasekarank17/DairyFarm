@@ -1,0 +1,36 @@
+# Deploy only what the Vercel build needs: mobile/ (web export) and backend/ (API function).
+# Dependencies are installed on Vercel, secrets come from Vercel env vars.
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+.vercel
+.git
+
+# Secrets / keys
+dairyfarmmanager-*.json
+*service-account*.json
+*-gcp-*.json
+
+# Native builds, exports, caches, logs
+mobile/android
+mobile/ios
+mobile/dist
+mobile/.expo
+mobile/logs
+mobile/web-build
+backend/logs
+backend/data
+backend/uploads
+backend/tests
+DF
+*.apk
+*.aab
+*.log
+
+# Local-only deployment files and docs
+docker-compose.yml
+docker-compose.override.yml
+setup-sqlserver-tcp.ps1
+docs
+*.md

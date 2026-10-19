@@ -11,7 +11,7 @@ A production-ready Android / iOS / Web app for running a dairy business: custome
 | Database | SQL Server (38 tables, idempotent migrations) |
 | Documents | pdfkit invoices, ExcelJS reports |
 | Messaging | Expo Push, SMTP e-mail, Meta WhatsApp Cloud API (with wa.me fallback), Fast2SMS OTP |
-| Deployment | Docker Compose (API on 8080, nginx web on 8090) or local dev (API 3000, Expo 8081) |
+| Deployment | Vercel (web + API in one project, Vercel Blob for backups/photos, Vercel Cron for jobs) — see [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md#5a-vercel-deployment); Docker Compose remains available for self-hosting |
 
 ## Documentation
 

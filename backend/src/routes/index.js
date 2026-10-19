@@ -28,5 +28,7 @@ router.use('/backup', require('./backup.routes'));
 router.use('/expenses', require('./expenses.routes'));
 router.use('/income', require('./income.routes'));
 router.use('/medicines', require('./medicines.routes'));
+router.use('/uploads', require('./uploads.routes'));
+router.use('/cron', require('./cron.routes'));
 
 module.exports = router;

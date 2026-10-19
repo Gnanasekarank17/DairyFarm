@@ -15,26 +15,41 @@ const poolConfig = {
     enableArithAbort: true,
   },
   pool: {
-    max: 10,
-    min: 2,
-    idleTimeoutMillis: 30000,
+    // Serverless instances are short-lived: keep the pool small and let it drain.
+    max: config.isServerless ? 4 : 10,
+    min: config.isServerless ? 0 : 2,
+    idleTimeoutMillis: config.isServerless ? 10000 : 30000,
   },
   connectionTimeout: config.db.connectionTimeout,
   requestTimeout: config.db.requestTimeout,
 };
 
 let pool = null;
+let connecting = null;
 
 const getPool = async () => {
   if (pool && pool.connected) return pool;
-  try {
-    pool = await sql.connect(poolConfig);
-    logger.info(`✅ Connected to SQL Server: ${config.db.server} / ${config.db.name}`);
-    return pool;
-  } catch (err) {
-    logger.error('SQL Server connection failed:', err.message);
-    throw err;
-  }
+  // De-duplicate concurrent cold-start connections (serverless fan-in).
+  if (connecting) return connecting;
+  connecting = (async () => {
+    try {
+      const p = new sql.ConnectionPool(poolConfig);
+      p.on('error', (err) => {
+        logger.error('SQL Server pool error:', err.message);
+        pool = null;
+      });
+      pool = await p.connect();
+      logger.info(`✅ Connected to SQL Server: ${config.db.server} / ${config.db.name}`);
+      return pool;
+    } catch (err) {
+      pool = null;
+      logger.error('SQL Server connection failed:', err.message);
+      throw err;
+    } finally {
+      connecting = null;
+    }
+  })();
+  return connecting;
 };
 
 // Helper – run a parameterised query and return recordset

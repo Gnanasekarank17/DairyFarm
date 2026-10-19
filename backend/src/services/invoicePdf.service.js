@@ -440,4 +440,6 @@ async function buildInvoicePdf(invoiceId) {
   return { buffer, filename: `invoice-${inv.InvoiceNumber}.pdf`, invoice: inv, customer, business };
 }
 
-module.exports = { renderInvoicePdf, buildInvoicePdf, getBusinessProfile, amountInWords };
+const hasNotoFonts = () => hasNoto;
+
+module.exports = { renderInvoicePdf, buildInvoicePdf, getBusinessProfile, amountInWords, hasNotoFonts };

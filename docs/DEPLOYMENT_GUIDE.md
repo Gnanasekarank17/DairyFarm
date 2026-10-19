@@ -118,6 +118,51 @@ docker compose down            # stop; keeps the dairy-uploads volume
 
 ---
 
+## 5a. Vercel deployment (web + API in one project)
+
+The Vercel project **dairy-farm-web** (team `gk-0c90`) is linked at the **repository root**. One deployment serves
+the Expo web export as static files and the Express API as a single Serverless Function (`api/index.js`), so the
+web app calls the API on its own origin (`/api/v1`). Native builds use the absolute URL
+`https://dairy-farm-web-vert.vercel.app/api/v1` (also reachable on `https://www.gkdf.com` once DNS resolves).
+
+| Piece | Where |
+|---|---|
+| Root config | `vercel.json` — install both `mobile/` and `backend/`, build `mobile/dist`, rewrite `/api/*` and `/health` to the function, daily cron |
+| API function | `api/index.js` → `backend/src/app.js` (Express app without `listen`) |
+| Scheduled jobs | Vercel Cron `30 1 * * *` UTC (07:00 IST) → `GET /api/v1/cron/daily` (`backend/src/routes/cron.routes.js`), guarded by `CRON_SECRET`. Hobby plan runs crons once a day; `/api/v1/cron/<job>` runs one job on demand (admin JWT also accepted) |
+| Files | Vercel Blob store connected to the project. Backups: `POST /backup/create` stores a private JSON snapshot, `GET /backup/list`, `GET /backup/download?pathname=`, `DELETE /backup?pathname=`. Photos/documents: `POST /uploads` (base64, ≤ 4 MB) returns a public URL to save on the record |
+| Logs | Console only on Vercel (`vercel logs`); file logging stays on for Docker |
+
+### Environment variables (Production + Preview)
+
+```
+DB_SERVER, DB_PORT=1433, DB_NAME, DB_USER, DB_PASSWORD, DB_ENCRYPT=true, DB_TRUST_SERVER_CERT=true
+JWT_SECRET, JWT_EXPIRES_IN, ADMIN_PIN, STAFF_PIN
+BUSINESS_NAME, BUSINESS_ADDRESS, BUSINESS_PHONE, BUSINESS_GST
+SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_FROM, FAST2SMS_API_KEY
+GOOGLE_CLIENT_ID, EXPO_ACCESS_TOKEN, CRON_SECRET
+BLOB_READ_WRITE_TOKEN, BLOB_STORE_ID            # injected by the Blob store
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID                # web build
+```
+
+`DB_SERVER` must be a SQL Server that is reachable from the internet (Azure SQL, a VM with port 1433 open, or a
+tunnel). A laptop `SQLEXPRESS` instance is not reachable from Vercel. Leave `DB_INSTANCE` empty and use port 1433.
+
+### Deploy
+
+```bash
+cd <repo root>
+npx vercel link --yes --project dairy-farm-web --scope gk-0c90   # once
+npx vercel env add DB_SERVER production                           # and the rest of the list above
+npx vercel --prod                                                  # build + deploy
+curl https://dairy-farm-web-vert.vercel.app/health?db=1&blob=1          # runtime, SQL Server and Blob checks
+```
+
+Limits to keep in mind: request bodies ≤ 4.5 MB, function time ≤ 60 s (`maxDuration` in `vercel.json`),
+rate limiting is per function instance.
+
+---
+
 ## 6. Native builds
 
 ```bash
